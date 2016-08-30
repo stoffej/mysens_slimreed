@@ -34,7 +34,7 @@
 #define MY_RADIO_NRF24
 //#define MY_RADIO_RFM69
 #define MY_NODE_ID 13
-
+#define MY_RF24_CHANNEL	76
 
 #include <MySensor.h>
 #include <SPI.h>
