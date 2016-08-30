@@ -34,9 +34,9 @@
 #define MY_RADIO_NRF24
 //#define MY_RADIO_RFM69
 #define MY_NODE_ID 13
-#define MY_RF24_CHANNEL	76
+#define MY_RF24_CHANNEL  76
 
-#include <MySensor.h>
+#include <MySensors.h>
 #include <SPI.h>
 #include <Vcc.h>
 
@@ -55,7 +55,7 @@ uint8_t sentValue=2;
 bool interruptReturn=false;
 
 Vcc vcc;
-MySensor gw;
+
 MyMessage msg(SW_CHILD_ID, V_TRIPPED);
 
 void setup()
@@ -82,10 +82,10 @@ void loop()
   }
   else {    // Woke up by pin change
       irtCounter++;
-      gw.sleep(50);       // Short delay to allow switch to properly settle
+      sleep(50);       // Short delay to allow switch to properly settle
       value = digitalRead(SW_PIN);
       if (value != sentValue) {
-         gw.send(msg.set(value==HIGH ? 1 : 0));
+         send(msg.set(value==HIGH ? 1 : 0));
          sentValue = value;
       }
       if (irtCounter>=BATTERY_REPORT_BY_IRT_CYCLE) {
@@ -95,12 +95,12 @@ void loop()
   }
 
   // Sleep until something happens with the sensor,   or one sleep_time has passed since last awake.
-  interruptReturn = gw.sleep(SW_PIN-2, CHANGE, ONE_DAY_SLEEP_TIME);
+  interruptReturn = sleep(SW_PIN-2, CHANGE, ONE_DAY_SLEEP_TIME);
 
 }
 
 void sendBatteryReport() {
           float p = vcc.Read_Perc(VCC_MIN, VCC_MAX, true);
           int batteryPcnt = static_cast<int>(p);
-          gw.sendBatteryLevel(batteryPcnt);
+          sendBatteryLevel(batteryPcnt);
 }
